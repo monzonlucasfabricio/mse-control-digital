@@ -121,5 +121,14 @@ void HAL_DAC_MspDeInit(DAC_HandleTypeDef* dacHandle)
 }
 
 /* USER CODE BEGIN 1 */
+void DAC_Write(DAC_HandleTypeDef *handle, uint16_t value)
+{
+	// DAC is 12 bit so maximum value should be 4096
+	if( value > 4096 )
+	{
+		value = 4096; // Saturation
+	}
 
+	HAL_DAC_SetValue(handle, DAC1_CHANNEL_1, DAC_ALIGN_12B_R, value);
+}
 /* USER CODE END 1 */

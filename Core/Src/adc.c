@@ -21,7 +21,11 @@
 #include "adc.h"
 
 /* USER CODE BEGIN 0 */
-
+enum{
+	CH0 = 0,
+	CH1 = 1,
+	CH2 = 2,
+}adc_e;
 /* USER CODE END 0 */
 
 ADC_HandleTypeDef hadc1;
@@ -211,4 +215,34 @@ void HAL_ADC_MspDeInit(ADC_HandleTypeDef* adcHandle)
 
 /* USER CODE BEGIN 1 */
 
+void ADC_SelectCH0(void)
+{
+	ADC_ChannelConfTypeDef sConfig = {0};
+	sConfig.Channel = ADC_CHANNEL_0;
+	sConfig.Rank = 1;
+	sConfig.SamplingTime = ADC_SAMPLETIME_28CYCLES;
+	if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
+	{
+		Error_Handler();
+	}
+}
+
+uint16_t ADC_Read(uint16_t adc)
+{
+	uint16_t adc_value;
+	switch(adc){
+		case CH0:
+			ADC_SelectCH0();
+		break;
+		default:
+			ADC_SelectCH0();
+		break;
+	}
+
+	HAL_ADC_Start(&hadc1);
+	HAL_ADC_PollForConversion(&hadc1, 1000);
+	adc_value = HAL_ADC_GetValue(&hadc1);
+	HAL_ADC_Stop(&hadc1);
+	return adc_value;
+}
 /* USER CODE END 1 */

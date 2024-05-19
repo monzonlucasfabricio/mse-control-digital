@@ -41,7 +41,7 @@ extern DAC_HandleTypeDef hdac;
 void MX_DAC_Init(void);
 
 /* USER CODE BEGIN Prototypes */
-
+void DAC_Write(DAC_HandleTypeDef *handle, uint16_t value);
 /* USER CODE END Prototypes */
 
 #ifdef __cplusplus
