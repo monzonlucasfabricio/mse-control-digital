@@ -1,0 +1,41 @@
+# Ignorar carpetas y archivos de configuración del entorno de desarrollo
+.project
+.cproject
+.settings/
+.loadpath
+.externalToolBuilders/
+.externalToolSettings/
+.metadata/
+.cxxsettings/
+debug.launch
+release.launch
+
+# Ignorar carpetas de compilación
+Debug/
+Release/
+
+# Ignorar archivos de salida generados
+*.elf
+*.map
+*.bin
+*.hex
+*.d
+*.o
+*.lst
+*.srec
+*.bak
+*.log
+*.tmp
+
+# Ignorar archivos de respaldo y temporales
+*.bak
+*.swp
+*~
+*.tmp
+
+# Ignorar archivos de configuración de compilación específicos de la máquina
+*.launch
+
+# Ignorar carpetas y archivos del sistema operativo
+.DS_Store
+Thumbs.db
