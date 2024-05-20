@@ -5,8 +5,8 @@
  *      Author: Lucas
  */
 
-#ifndef INC_APP_H_
-#define INC_APP_H_
+#ifndef INC_APP_MAIN_H_
+#define INC_APP_MAIN_H_
 
 #include "main.h"
 #include "task.h"
@@ -19,4 +19,4 @@ typedef enum{
 
 retType APP_TasksCreate();
 
-#endif /* INC_APP_H_ */
+#endif /* INC_APP_MAIN_H_ */

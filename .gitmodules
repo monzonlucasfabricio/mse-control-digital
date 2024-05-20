@@ -1,0 +1,3 @@
+[submodule "Core/App"]
+	path = Core/App
+	url = git@github.com:monzonlucasfabricio/control-sub.git

@@ -137,6 +137,7 @@ void print_debug_msg(char *format,...)
 	va_list args;
 	va_start(args, format);
 	vsprintf(str, format, args);
+	strcat(str, "\n");
 	HAL_UART_Transmit(&huart3, (uint8_t *)str, strlen(str), HAL_MAX_DELAY);
 #endif
 }
