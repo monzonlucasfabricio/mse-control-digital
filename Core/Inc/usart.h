@@ -29,7 +29,9 @@ extern "C" {
 #include "main.h"
 
 /* USER CODE BEGIN Includes */
-
+#include "stdio.h"
+#include "stdarg.h"
+#include "string.h"
 /* USER CODE END Includes */
 
 extern UART_HandleTypeDef huart3;
@@ -41,6 +43,7 @@ extern UART_HandleTypeDef huart3;
 void MX_USART3_UART_Init(void);
 
 /* USER CODE BEGIN Prototypes */
+void print_debug_msg(char *format,...);
 void uartWriteByteArray( UART_HandleTypeDef *huart, char* byteArray, uint32_t byteArrayLen );
 /* USER CODE END Prototypes */
 

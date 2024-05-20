@@ -21,7 +21,7 @@
 #include "usart.h"
 
 /* USER CODE BEGIN 0 */
-
+#define DEBUG_MSG_ENABLE
 /* USER CODE END 0 */
 
 UART_HandleTypeDef huart3;
@@ -128,8 +128,8 @@ void uartWriteByteArray( UART_HandleTypeDef *huart, char* byteArray, uint32_t by
 }
 
 /* Print formatted string to console over uart */
-void print_debug_msg(char *format,...){
-
+void print_debug_msg(char *format,...)
+{
 #ifdef DEBUG_MSG_ENABLE
 	char str[80];
 
@@ -137,7 +137,7 @@ void print_debug_msg(char *format,...){
 	va_list args;
 	va_start(args, format);
 	vsprintf(str, format, args);
-	HAL_UART_Transmit(&huart2, (uint8_t *)str, strlen(str), HAL_MAX_DELAY);
-#endif //DEBUG_MSG_ENABLE
+	HAL_UART_Transmit(&huart3, (uint8_t *)str, strlen(str), HAL_MAX_DELAY);
+#endif
 }
 /* USER CODE END 1 */

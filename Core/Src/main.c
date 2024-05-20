@@ -29,7 +29,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "app.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -100,7 +100,7 @@ int main(void)
   MX_DAC_Init();
   MX_TIM1_Init();
   /* USER CODE BEGIN 2 */
-
+  APP_TasksCreate();
   /* USER CODE END 2 */
 
   /* Init scheduler */
