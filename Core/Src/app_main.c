@@ -8,6 +8,7 @@
 #include <app_main.h>
 #include "stm32f429xx.h"
 #include "arm_math.h"
+#include "ram_db.h"
 
 // Definición de las matrices
 #define ROWS 3
@@ -32,11 +33,12 @@ arm_matrix_instance_f32 matC;
 /* Declaraciones */
 void APP_TaskDemo(void *pvParameter);
 void APP_TaskDemoMath(void *pvParameter);
+void APP_TaskTestRamdb(void *pvParameter);
 
 retType APP_TasksCreate(void)
 {
 	/* Task Size is in words -> uint32_t -> 1024 bytes / 4 -> 256 words */
-	if (xTaskCreate(APP_TaskDemoMath, "Task1", 256, NULL, tskIDLE_PRIORITY + 1, NULL) != pdPASS)
+	if (xTaskCreate(APP_TaskTestRamdb, "Task1", 256, NULL, tskIDLE_PRIORITY + 1, NULL) != pdPASS)
 	{
 		return API_ERROR;
 	}
@@ -65,10 +67,22 @@ void APP_TaskDemoMath(void *pvParameter)
     {
         // Multiplicar las matrices A y B
         arm_mat_mult_f32(&matA, &matB, &matC);
-
-        // Aquí puedes añadir un punto de interrupción o algún método para ver el resultado
-        // Por ejemplo, puedes enviar el resultado a través de UART para depuración
-
         vTaskDelay(1000); // Esperar 1 segundo
     }
 }
+
+
+void APP_TaskTestRamdb(void *pvParameter)
+{
+    for(;;)
+    {
+        test_u8();
+        vTaskDelay(1000);
+    }
+}
+
+/*************************************************************************************************/
+/* Functions for Digital Control																 */
+/*************************************************************************************************/
+
+

@@ -46,7 +46,8 @@ _Min_Stack_Size = 0x400; /* required amount of stack */
 MEMORY
 {
   CCMRAM    (xrw)    : ORIGIN = 0x10000000,   LENGTH = 64K
-  RAM    (xrw)    : ORIGIN = 0x20000000,   LENGTH = 192K
+  RAM    (xrw)    : ORIGIN = 0x20000000,   LENGTH = 190K
+  RAMDB  (xrw)    : ORIGIN = 0x2002F800,   LENGTH = 2K
   FLASH    (rx)    : ORIGIN = 0x8000000,   LENGTH = 2048K
 }
 
@@ -60,6 +61,14 @@ SECTIONS
     KEEP(*(.isr_vector)) /* Startup code */
     . = ALIGN(4);
   } >RAM
+
+  /* Section for RAMDB */
+
+  .ramdb (NOLOAD): {
+    . = ALIGN(4);
+    *(.ramdb)
+    . = ALIGN(4);
+  }> RAMDB
 
   /* The program code and other data into "RAM" Ram type memory */
   .text :

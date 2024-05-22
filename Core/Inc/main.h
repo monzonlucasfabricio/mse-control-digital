@@ -33,6 +33,11 @@ extern "C" {
 /* USER CODE BEGIN Includes */
 #include "FreeRTOS.h"
 #include "usart.h"
+#include "stdint.h"
+#include "stdlib.h"
+#include "stdio.h"
+#include "math.h"
+#include "arm_math.h"
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
