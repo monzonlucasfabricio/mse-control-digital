@@ -37,14 +37,17 @@ extern ADC_HandleTypeDef hadc1;
 extern ADC_HandleTypeDef hadc2;
 
 /* USER CODE BEGIN Private defines */
-
+typedef enum {
+   ADC_ENABLE, ADC_DISABLE
+} adcInit_t;
 /* USER CODE END Private defines */
 
 void MX_ADC1_Init(void);
 void MX_ADC2_Init(void);
 
 /* USER CODE BEGIN Prototypes */
-uint16_t ADC_Read(uint16_t adc);
+void ADC_Init(uint16_t enable);
+uint16_t ADC_Read(uint16_t channel);
 /* USER CODE END Prototypes */
 
 #ifdef __cplusplus

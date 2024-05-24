@@ -2,6 +2,7 @@
 #define RAM_DB_H
 
 #include <stdint.h>
+#include "app_main.h"
 
 #define RAM_SIZE 2048  // Tamaño total de la base de datos en bytes
 

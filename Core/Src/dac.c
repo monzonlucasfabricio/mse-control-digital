@@ -64,7 +64,8 @@ void MX_DAC_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN DAC_Init 2 */
-
+  HAL_DAC_Start(&hdac, DAC1_CHANNEL_2);
+  HAL_DAC_SetValue(&hdac, DAC1_CHANNEL_2, DAC_ALIGN_12B_R, 0);
   /* USER CODE END DAC_Init 2 */
 
 }
@@ -129,6 +130,11 @@ void DAC_Write(DAC_HandleTypeDef *handle, uint16_t value)
 		value = 4096; // Saturation
 	}
 
-	HAL_DAC_SetValue(handle, DAC1_CHANNEL_1, DAC_ALIGN_12B_R, value);
+	HAL_DAC_SetValue(handle, DAC1_CHANNEL_2, DAC_ALIGN_12B_R, value);
+}
+
+void DAC_Init(uint16_t enable)
+{
+	MX_DAC_Init();
 }
 /* USER CODE END 1 */

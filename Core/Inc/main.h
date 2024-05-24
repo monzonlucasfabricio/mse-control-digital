@@ -38,6 +38,9 @@ extern "C" {
 #include "stdio.h"
 #include "math.h"
 #include "arm_math.h"
+#include "adc.h"
+#include "dac.h"
+#include "stdbool.h"
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/

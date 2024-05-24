@@ -26,6 +26,8 @@ enum{
 	CH1 = 1,
 	CH2 = 2,
 }adc_e;
+
+void ADC_SelectCH(uint16_t channel);
 /* USER CODE END 0 */
 
 ADC_HandleTypeDef hadc1;
@@ -66,6 +68,7 @@ void MX_ADC1_Init(void)
 
   /** Configure for the selected ADC regular channel its corresponding rank in the sequencer and its sample time.
   */
+  /*
   sConfig.Channel = ADC_CHANNEL_0;
   sConfig.Rank = 1;
   sConfig.SamplingTime = ADC_SAMPLETIME_3CYCLES;
@@ -73,6 +76,7 @@ void MX_ADC1_Init(void)
   {
     Error_Handler();
   }
+  */
   /* USER CODE BEGIN ADC1_Init 2 */
 
   /* USER CODE END ADC1_Init 2 */
@@ -113,6 +117,7 @@ void MX_ADC2_Init(void)
 
   /** Configure for the selected ADC regular channel its corresponding rank in the sequencer and its sample time.
   */
+  /*
   sConfig.Channel = ADC_CHANNEL_3;
   sConfig.Rank = 1;
   sConfig.SamplingTime = ADC_SAMPLETIME_3CYCLES;
@@ -120,6 +125,7 @@ void MX_ADC2_Init(void)
   {
     Error_Handler();
   }
+  */
   /* USER CODE BEGIN ADC2_Init 2 */
 
   /* USER CODE END ADC2_Init 2 */
@@ -215,34 +221,33 @@ void HAL_ADC_MspDeInit(ADC_HandleTypeDef* adcHandle)
 
 /* USER CODE BEGIN 1 */
 
-void ADC_SelectCH0(void)
+void ADC_SelectCH(uint16_t channel)
 {
 	ADC_ChannelConfTypeDef sConfig = {0};
-	sConfig.Channel = ADC_CHANNEL_0;
+	sConfig.Channel = channel;
 	sConfig.Rank = 1;
-	sConfig.SamplingTime = ADC_SAMPLETIME_28CYCLES;
+	sConfig.SamplingTime = ADC_SAMPLETIME_3CYCLES;
 	if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
 	{
 		Error_Handler();
 	}
 }
 
-uint16_t ADC_Read(uint16_t adc)
+uint16_t ADC_Read(uint16_t channel)
 {
 	uint16_t adc_value;
-	switch(adc){
-		case CH0:
-			ADC_SelectCH0();
-		break;
-		default:
-			ADC_SelectCH0();
-		break;
-	}
+
+	ADC_SelectCH(channel);
 
 	HAL_ADC_Start(&hadc1);
-	HAL_ADC_PollForConversion(&hadc1, 1000);
+	HAL_ADC_PollForConversion(&hadc1, HAL_MAX_DELAY);
 	adc_value = HAL_ADC_GetValue(&hadc1);
 	HAL_ADC_Stop(&hadc1);
 	return adc_value;
+}
+
+void ADC_Init(uint16_t enable)
+{
+	MX_ADC1_Init();
 }
 /* USER CODE END 1 */

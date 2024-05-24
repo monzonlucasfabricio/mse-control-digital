@@ -35,12 +35,15 @@ extern "C" {
 extern DAC_HandleTypeDef hdac;
 
 /* USER CODE BEGIN Private defines */
-
+typedef enum {
+   DAC_ENABLE, DAC_DISABLE
+} dacInit_t;
 /* USER CODE END Private defines */
 
 void MX_DAC_Init(void);
 
 /* USER CODE BEGIN Prototypes */
+void DAC_Init(uint16_t enable);
 void DAC_Write(DAC_HandleTypeDef *handle, uint16_t value);
 /* USER CODE END Prototypes */
 
