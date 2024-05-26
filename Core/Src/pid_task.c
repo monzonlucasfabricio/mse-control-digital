@@ -24,9 +24,9 @@
 
 /*=====[Definition macros of private constants]==============================*/
 
-#define SCALE_Y         0.003225806f    // 3.3 / 1023     10-bit ADC to Voltage
-#define SCALE_R         0.003225806f    // 3.3 / 1023     10-bit ADC to Voltage
-#define SCALE_U         310.0f          // 1023 / 3.3     Voltage to 10-bit DAC
+#define SCALE_Y         0.0008058608    // 3.3 / 4095     12-bit ADC to Voltage
+#define SCALE_R         0.0008058608    // 3.3 / 4095     12-bit ADC to Voltage
+#define SCALE_U         1240.9          // 4095 / 3.3     Voltage to 12-bit DAC
 
 /*=====[Private function-like macros]========================================*/
 
@@ -117,6 +117,37 @@ void pidControlTask( void* taskParmPtr )
       // (periodical delay)
       vTaskDelayUntil( &xLastWakeTime, xPeriodicity );
    }
+}
+
+
+void PID_TaskDemo(void* pvParameter)
+{
+	ADC_Init( ADC_ENABLE );
+	DAC_Init( DAC_ENABLE );
+
+	  // Controller signals
+	float r = 0.0f; // Measure of reference r[k]
+	float y = 0.0f; // Measure of system output y[k]
+//	float u = 0.0f; // Calculated controller's output u[k]
+	uint16_t tmp_y;
+	uint16_t tmp_r;
+
+	char floatbuf[50];
+
+	while(true)
+	{
+		tmp_r = ADC_Read( CH3  ); // Entrada
+		tmp_y = ADC_Read( CH10 ); // Salida
+
+		y = tmp_y * SCALE_Y; // Entrada
+		r = tmp_r * SCALE_R; // Salida
+
+		print_debug_msg("Y : %d",tmp_y);
+		print_debug_msg("R : %d",tmp_r);
+
+		vTaskDelay(10);
+	}
+
 }
 
 /*=====[Implementations of interrupt functions]==============================*/

@@ -17,6 +17,7 @@ typedef enum{
 	API_INVALID
 }retType;
 
-retType APP_TasksCreate();
+retType APP_TasksCreate(void);
+
 
 #endif /* INC_APP_MAIN_H_ */
