@@ -139,27 +139,27 @@ void pidUpdateController( PIDController_t* pid, float y, float r )
 // PID printf object
 void pidPrintf( PIDController_t* pid )
 {
-   printf( "PID structure (object)\r\n" );
-   printf( "----------------------\r\n\r\n" );
-   printf( "Configuration:\r\n" );
-   printf( "  Kp = %f\r\n", pid->config.Kp );
-   printf( "  Ki = %f\r\n", pid->config.Ki );
-   printf( "  Kd = %f\r\n", pid->config.Kd );
-   printf( "  h = %f\r\n", pid->config.h );
-   printf( "  N = %f\r\n", pid->config.N );
-   printf( "  b = %f\r\n", pid->config.b );
-   printf( "  uMax = %f\r\n", pid->config.uMax );
-   printf( "  uMin = %f\r\n", pid->config.uMin );
-   printf( "State:\r\n" );
-   printf( "  P[k] = %f\r\n", pid->state.P );
-   printf( "  I[k] = %f\r\n", pid->state.I );
-   printf( "  D[k] = %f\r\n", pid->state.D );
-   printf( "  D[k-1] = %f (past D)\r\n", pid->state.pastD );
-   printf( "  y[k-1] = %f (past y)\r\n", pid->state.pastY );
-   printf( "  I[k+1] = %f (future I)\r\n", pid->state.futureI );
-   printf( "  u[k] = %f\r\n", pid->state.u );
-   printf( "  u_sat[k] = %f\r\n", pid->state.u_sat );
-   printf( "\r\n" );
+//   printf( "PID structure (object)\r\n" );
+//   printf( "----------------------\r\n\r\n" );
+//   printf( "Configuration:\r\n" );
+//   printf( "  Kp = %f\r\n", pid->config.Kp );
+//   printf( "  Ki = %f\r\n", pid->config.Ki );
+//   printf( "  Kd = %f\r\n", pid->config.Kd );
+//   printf( "  h = %f\r\n", pid->config.h );
+//   printf( "  N = %f\r\n", pid->config.N );
+//   printf( "  b = %f\r\n", pid->config.b );
+//   printf( "  uMax = %f\r\n", pid->config.uMax );
+//   printf( "  uMin = %f\r\n", pid->config.uMin );
+//   printf( "State:\r\n" );
+//   printf( "  P[k] = %f\r\n", pid->state.P );
+//   printf( "  I[k] = %f\r\n", pid->state.I );
+//   printf( "  D[k] = %f\r\n", pid->state.D );
+//   printf( "  D[k-1] = %f (past D)\r\n", pid->state.pastD );
+//   printf( "  y[k-1] = %f (past y)\r\n", pid->state.pastY );
+//   printf( "  I[k+1] = %f (future I)\r\n", pid->state.futureI );
+//   printf( "  u[k] = %f\r\n", pid->state.u );
+//   printf( "  u_sat[k] = %f\r\n", pid->state.u_sat );
+//   printf( "\r\n" );
 }
 
 
