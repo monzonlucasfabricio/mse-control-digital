@@ -132,8 +132,6 @@ void PID_TaskDemo(void* pvParameter)
 	uint16_t tmp_y;
 	uint16_t tmp_r;
 
-	char floatbuf[50];
-
 	while(true)
 	{
 		tmp_r = ADC_Read( CH3  ); // Entrada

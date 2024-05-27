@@ -10,6 +10,28 @@
 #include "arm_math.h"
 #include "ram_db.h"
 
+
+/* ================= IDENTIFICACION ================= */
+
+// ADC0 Channels for u and y
+#define ADC0_CH_Y       CH3
+
+// Noise signal limits
+#define DAC_REFERENCE_VALUE_HIGH   2667  // 4095 = 3.3V, 2667 = 2.15V
+#define DAC_REFERENCE_VALUE_LOW    1427  // 4095 = 3.3V, 1427 = 1.15V
+
+// ADC_Read() returns 12 bits integer sample (uint16_t)
+// sampleInVolts = (3.3 / 1023.0) * adcSample
+#define getVoltsSampleFrom(adc0Channel) 3.3*(float)ADC_Read((adc0Channel))/4095.0
+
+static StackType_t taskIdentificationStack[configMINIMAL_STACK_SIZE*15];
+static StaticTask_t taskIdentificationTCB;
+
+t_IRLSdata* tIRLS1;
+t_ILSdata* tILS1;
+
+void receiveData (float* buffer);
+
 // Definición de las matrices
 #define ROWS 3
 #define COLS 3
@@ -81,8 +103,65 @@ void APP_TaskTestRamdb(void *pvParameter)
     }
 }
 
+
 /*************************************************************************************************/
 /* Functions for Digital Control																 */
 /*************************************************************************************************/
 
+retType APP_InitIdentif(void)
+{
+	    // ----- Initialize ADC and DAC ------------------
+	    ADC_Init(ADC_ENABLE);
+	    DAC_Init(DAC_ENABLE);
 
+	    tIRLS1 = (t_IRLSdata*) pvPortMalloc (sizeof(t_IRLSdata));
+	    tILS1 = (t_ILSdata*) pvPortMalloc (sizeof(t_ILSdata));
+
+		IRLS_Init(tIRLS1, 10, receiveData);
+		ILS_Init(tILS1, 50, 10, receiveData);
+
+	    xTaskCreateStatic(
+	        ILS_Task,                   // task function
+	        "Identification Task",      // human-readable neame of task
+	        configMINIMAL_STACK_SIZE,   // task stack size
+	        (void*)tILS1,               // task parameter (cast to void*)
+	        tskIDLE_PRIORITY+1,         // task priority
+	        taskIdentificationStack,    // task stack (StackType_t)
+	        &taskIdentificationTCB      // pointer to Task TCB (StaticTask_t)
+	    );
+
+	    // xTaskCreateStatic(
+	    //     IRLS_Task,                  // task function
+	    //     "Identification Task",      // human-readable neame of task
+	    //     configMINIMAL_STACK_SIZE,   // task stack size
+	    //     (void*)tIRLS1,              // task parameter (cast to void*)
+	    //     tskIDLE_PRIORITY+1,         // task priority
+	    //     taskIdentificationStack,    // task stack (StackType_t)
+	    //     &taskIdentificationTCB      // pointer to Task TCB (StaticTask_t)
+	    // );
+	    return API_OK;
+}
+
+void receiveData (float* buffer)
+{
+    float Y, U;
+
+    uint16_t dacValue = 0;
+
+    // random = limite_inferior + rand() % (limite_superior +1 - limite_inferior);
+    dacValue = DAC_REFERENCE_VALUE_LOW + rand() % (DAC_REFERENCE_VALUE_HIGH+1 - DAC_REFERENCE_VALUE_LOW);
+
+    DAC_Write(&hdac, dacValue );
+
+    // Need at least 2.5 us to uptate DAC.
+    // delayInaccurateUs(5);
+    vTaskDelay(1);
+
+    // dacSample = (1023.0 / 3.3) * sampleInVolts
+    // 1023.0 / 3.3 = 310.0
+    U = (float) dacValue * 3.3 / 4095.0;
+	Y = (float) getVoltsSampleFrom( ADC0_CH_Y );
+
+	buffer[0] = U;
+	buffer[1] = Y;
+}

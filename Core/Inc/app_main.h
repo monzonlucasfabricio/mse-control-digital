@@ -10,6 +10,9 @@
 
 #include "main.h"
 #include "task.h"
+#include "identif_task.h"
+#include "identif_ls.h"
+#include "identif_rls.h"
 
 typedef enum{
 	API_OK,
@@ -18,6 +21,7 @@ typedef enum{
 }retType;
 
 retType APP_TasksCreate(void);
+retType APP_InitIdentif(void);
 
 
 #endif /* INC_APP_MAIN_H_ */
