@@ -45,6 +45,7 @@ void MX_USART3_UART_Init(void);
 /* USER CODE BEGIN Prototypes */
 void print_debug_msg(char *format,...);
 void uartWriteByteArray( UART_HandleTypeDef *huart, char* byteArray, uint32_t byteArrayLen );
+void uartWriteString( UART_HandleTypeDef *huart, const char* str );
 /* USER CODE END Prototypes */
 
 #ifdef __cplusplus

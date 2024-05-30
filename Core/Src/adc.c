@@ -145,7 +145,7 @@ void ADC_SelectCH(uint16_t channel)
 	ADC_ChannelConfTypeDef sConfig = {0};
 	sConfig.Channel = channel;
 	sConfig.Rank = 1;
-	sConfig.SamplingTime = ADC_SAMPLETIME_3CYCLES;
+	sConfig.SamplingTime = ADC_SAMPLETIME_28CYCLES;
 	if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
 	{
 		Error_Handler();

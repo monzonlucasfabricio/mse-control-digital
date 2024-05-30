@@ -91,32 +91,32 @@ void IRLS_Task( void* taskParmPtr )
 // Función para imprimir los parámetros la planta (2do orden)
 void console_print (float* buffer)
 {
-//	uint32_t i;
-//	int32_t integer, fraction;
-//
-//	// Imprimo los parámetros calculados
-//	printf ("Parametros = [\t");
-//	for (i = 0; i<5; i++)
-//	{
-//		// Casteo de float a int
-//		integer = (int)buffer[i];
-//		fraction = (int)(((buffer[i] - (float)integer)) * 1000);
-//        if (fraction<0)
-//        {
-//            fraction = (-1)*fraction;
-//            if (integer==0)
-//            {
-//                printf("-%d.%03d\t", integer, fraction);
-//            }
-//            else
-//            {
-//                printf("%d.%03d\t", integer, fraction);
-//            }
-//        }
-//        else
-//        {
-//            printf("%d.%03d\t", integer, fraction);
-//        }
-//	}
-//	printf("]\t");
+	uint32_t i;
+	int32_t integer, fraction;
+
+	// Imprimo los parámetros calculados
+	print_debug_msg("Parametros = [\t");
+	for (i = 0; i<5; i++)
+	{
+		// Casteo de float a int
+		integer = (int)buffer[i];
+		fraction = (int)(((buffer[i] - (float)integer)) * 1000);
+        if (fraction<0)
+        {
+            fraction = (-1)*fraction;
+            if (integer==0)
+            {
+            	print_debug_msg("-%d.%03d\t", integer, fraction);
+            }
+            else
+            {
+            	print_debug_msg("%d.%03d\t", integer, fraction);
+            }
+        }
+        else
+        {
+        	print_debug_msg("%d.%03d\t", integer, fraction);
+        }
+	}
+	print_debug_msg("]\t");
 }

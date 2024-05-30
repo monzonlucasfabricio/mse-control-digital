@@ -77,7 +77,6 @@ void pidInit( PIDController_t* pid,
    //pidPrintf( pid );
 }
 
-
 // Calculate PID controller output u[k] and return it
 float pidCalculateControllerOutput( PIDController_t* pid, float y, float r )
 {
@@ -136,6 +135,7 @@ void pidUpdateController( PIDController_t* pid, float y, float r )
 }
 
 
+
 // PID printf object
 void pidPrintf( PIDController_t* pid )
 {
@@ -171,10 +171,10 @@ static void pidGatherDebugSamples( PIDController_t* pid, float y, float r )
    // Save and show samples
    if( i< N_SAMPLES ) {
       if (i == 0) {
-         uartWriteString( UART_USB, "\r\n\r\nGathering " );
-         uint64ToString( N_SAMPLES, ntos, 10 );
-         uartWriteString( UART_USB, ntos );
-         uartWriteString( UART_USB, " PID samples...\r\n\r\n" );
+         uartWriteString( &huart3, "\r\n\r\nGathering " );
+         // uint64ToString( N_SAMPLES, ntos, 10 );
+         // uartWriteString( UART_USB, ntos );
+         uartWriteString( &huart3, " PID samples...\r\n\r\n" );
       }
 
       // Save N_SAMPLES samples of R[k] and Y[k]
@@ -186,45 +186,45 @@ static void pidGatherDebugSamples( PIDController_t* pid, float y, float r )
 
    } else {
       // Indicate that finish take samples
-      gpioWrite( LEDB, OFF );
-      gpioWrite( LED1, ON );
+//      gpioWrite( LEDB, OFF );
+//      gpioWrite( LED1, ON );
 
       // Note thath printf() does not work properly
 
       // print r[k] samples
-      uartWriteString( UART_USB, "r = [ " );
+      uartWriteString( &huart3, "r = [ " );
       for( i=0; i<N_SAMPLES; i++) {
-         uartWriteString( UART_USB, floatToString( r_array[i], ntos, 5 ) );
-         uartWriteString( UART_USB, " " );
+         uartWriteString( &huart3, floatToString( r_array[i], ntos, 5 ) );
+         uartWriteString( &huart3, " " );
       }
-      uartWriteString( UART_USB, "];\r\n\r\n" );
+      uartWriteString( &huart3, "];\r\n\r\n" );
 
       // print y[k] samples
-      uartWriteString( UART_USB, "y = [ " );
+      uartWriteString( &huart3, "y = [ " );
       for( i=0; i<N_SAMPLES; i++) {
-         uartWriteString( UART_USB, floatToString( y_array[i], ntos, 5 ) );
-         uartWriteString( UART_USB, " " );
+         uartWriteString( &huart3, floatToString( y_array[i], ntos, 5 ) );
+         uartWriteString( &huart3, " " );
       }
-      uartWriteString( UART_USB, "];\r\n\r\n" );
+      uartWriteString( &huart3, "];\r\n\r\n" );
 
       // print u[k] samples
-      uartWriteString( UART_USB, "u = [ " );
+      uartWriteString( &huart3, "u = [ " );
       for( i=0; i<N_SAMPLES; i++) {
-         uartWriteString( UART_USB, floatToString( u_array[i], ntos, 5 ) );
-         uartWriteString( UART_USB, " " );
+         uartWriteString( &huart3, floatToString( u_array[i], ntos, 5 ) );
+         uartWriteString( &huart3, " " );
       }
-      uartWriteString( UART_USB, "];\r\n\r\n" );
+      uartWriteString( &huart3, "];\r\n\r\n" );
 
       // print uSat[k] samples
-      uartWriteString( UART_USB, "uSat = [ " );
+      uartWriteString( &huart3, "uSat = [ " );
       for( i=0; i<N_SAMPLES; i++) {
-         uartWriteString( UART_USB, floatToString( usat_array[i], ntos, 5 ) );
-         uartWriteString( UART_USB, " " );
+         uartWriteString( &huart3, floatToString( usat_array[i], ntos, 5 ) );
+         uartWriteString( &huart3, " " );
       }
-      uartWriteString( UART_USB, "];\r\n\r\n" );
+      uartWriteString( &huart3, "];\r\n\r\n" );
 
-      uartWriteString( UART_USB, "All samples printed. PROGRAM HALTED.\r\n" );
-      gpioWrite( LED2, ON );
+      uartWriteString( &huart3, "All samples printed. PROGRAM HALTED.\r\n" );
+      // gpioWrite( LED2, ON );
 
       while(1);
    }

@@ -66,6 +66,9 @@ void MX_DAC_Init(void)
   /* USER CODE BEGIN DAC_Init 2 */
   HAL_DAC_Start(&hdac, DAC1_CHANNEL_2);
   HAL_DAC_SetValue(&hdac, DAC1_CHANNEL_2, DAC_ALIGN_12B_R, 0);
+
+  HAL_DAC_Start(&hdac, DAC1_CHANNEL_1);
+  HAL_DAC_SetValue(&hdac, DAC1_CHANNEL_1, DAC_ALIGN_12B_R, 0);
   /* USER CODE END DAC_Init 2 */
 
 }
@@ -125,12 +128,12 @@ void HAL_DAC_MspDeInit(DAC_HandleTypeDef* dacHandle)
 void DAC_Write(DAC_HandleTypeDef *handle, uint16_t value)
 {
 	// DAC is 12 bit so maximum value should be 4096
-	if( value > 4096 )
+	if( value > 4095 )
 	{
-		value = 4096; // Saturation
+		value = 4095; // Saturation
 	}
 
-	HAL_DAC_SetValue(handle, DAC1_CHANNEL_2, DAC_ALIGN_12B_R, value);
+	HAL_DAC_SetValue(handle, DAC1_CHANNEL_1, DAC_ALIGN_12B_R, value);
 }
 
 void DAC_Init(uint16_t enable)

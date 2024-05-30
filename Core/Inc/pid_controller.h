@@ -61,7 +61,20 @@ extern "C" {
 
 /*=====[Definition macros of public constants]===============================*/
 
-// #define PID_PRINT_RESULT
+//#define PID_PRINT_RESULT
+#define NUM_SIZE 3
+#define DEN_SIZE 3
+
+// Coeficientes del numerador en Q15
+
+#define NUM0 1.0f
+#define NUM1 -1.55892256f
+#define NUM2 0.62932468f
+
+// Coeficientes del denominador en Q15
+#define DEN0 1.0f
+#define DEN1 -1.45598237f
+#define DEN2 0.52638449f
 
 #ifdef PID_PRINT_RESULT
 // Number of samples to save

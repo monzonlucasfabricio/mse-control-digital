@@ -98,8 +98,8 @@ int main(void)
   MX_DAC_Init();
   MX_TIM1_Init();
   /* USER CODE BEGIN 2 */
-//  APP_TasksCreate();
-  APP_InitIdentif();
+  APP_TasksCreate();
+//  APP_InitIdentif();
   /* USER CODE END 2 */
 
   /* Init scheduler */
