@@ -22,6 +22,7 @@ typedef enum{
 
 retType APP_TasksCreate(void);
 retType APP_InitIdentif(void);
+void identificationTask(void *pvParameters);
 
 
 #endif /* INC_APP_MAIN_H_ */

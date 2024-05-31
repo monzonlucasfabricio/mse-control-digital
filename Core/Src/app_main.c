@@ -60,7 +60,7 @@ void APP_TaskTestRamdb(void *pvParameter);
 retType APP_TasksCreate(void)
 {
 	/* Task Size is in words -> uint32_t -> 1024 bytes / 4 -> 256 words */
-	if (xTaskCreate(pidControlTask, "Task1", 256, NULL, tskIDLE_PRIORITY + 1, NULL) != pdPASS)
+	if (xTaskCreate(identificationTask, "Task1", 3000, NULL, tskIDLE_PRIORITY + 1, NULL) != pdPASS)
 	{
 		return API_ERROR;
 	}
