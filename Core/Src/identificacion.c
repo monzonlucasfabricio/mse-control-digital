@@ -20,7 +20,7 @@
 #define DAC_REFERENCE_VALUE_LOW    1427  // 4095 = 3.3V, 1427 = 1.15V
 #define getVoltsSampleFrom(adc0Channel) 3.3*(float)ADC_Read((adc0Channel))/4095.0
 #define SCALE_U 4095 / 3.3
-
+#define TS_MS 5
 /* Variables */
 double u[DATA_SIZE]; // Entrada
 double y[DATA_SIZE]; // Salida
@@ -33,29 +33,24 @@ void least_squares(double *u, double *y, int size, double *a, double *b);
 void invert_matrix(double A[5][5], double A_inv[5][5]);
 void delay_us(uint32_t us);
 
-/* Identification Task */
+
 void identificationTask(void *pvParameters) {
     static portTickType xLastWakeTime;
     generate_prbs_signal(u, DATA_SIZE);
 	xLastWakeTime = xTaskGetTickCount();
-    for(;;) {
-
-//        for (int i = 0; i < DATA_SIZE; i++)
-//        {
-//        	print_debug_msg("%d\n",u[i]);
-//        }
-        
+    for(;;) 
+    {
         for (int i = 0; i < DATA_SIZE; i++)
         {
             DAC_Write(&hdac, u[i] * SCALE_U);
             delay_us(10);
             y[i] = getVoltsSampleFrom(CH10);
-            vTaskDelayUntil( &xLastWakeTime, ( 5/ portTICK_RATE_MS ) );
+            vTaskDelayUntil( &xLastWakeTime, ( TS_MS / portTICK_RATE_MS ) );
         }
 
         least_squares(u, y, DATA_SIZE, a, b);
 
-        print_debug_msg("Identified system parameters:\n");
+        print_debug_msg("Parametros:\n");
         float_print("a0",a[0]);
         float_print("a1",a[1]);
         float_print("a2",a[2]);
