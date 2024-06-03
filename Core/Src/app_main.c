@@ -20,6 +20,11 @@
 #define DAC_REFERENCE_VALUE_HIGH   2667  // 4095 = 3.3V, 2667 = 2.15V
 #define DAC_REFERENCE_VALUE_LOW    1427  // 4095 = 3.3V, 1427 = 1.15V
 
+QueueHandle_t uart3RxQueue;
+SemaphoreHandle_t xMutex;
+uint8_t rxBuffer[RX_BUFFER_SIZE];
+float globalVar1, globalVar2, globalVar3;
+
 // ADC_Read() returns 12 bits integer sample (uint16_t)
 // sampleInVolts = (3.3 / 1023.0) * adcSample
 #define getVoltsSampleFrom(adc0Channel) 3.3*(float)ADC_Read((adc0Channel))/4095.0
@@ -59,8 +64,31 @@ void APP_TaskTestRamdb(void *pvParameter);
 
 retType APP_TasksCreate(void)
 {
+	// // Create the queue
+    // uart3RxQueue = xQueueCreate(10, RX_BUFFER_SIZE);
+    // if (uart3RxQueue == NULL)
+    // {
+    //     // Handle error
+    // }
+
+    // // Create the mutex
+    // xMutex = xSemaphoreCreateMutex();
+    // if (xMutex == NULL)
+    // {
+    //     // Handle error
+    // }
+
+    // // Start UART receive interrupt
+    // HAL_UART_Receive_IT(&huart3, rxBuffer, RX_BUFFER_SIZE);
+
+    // // Create the UART3 task
+    // if (xTaskCreate(UART3Task, "UART3Task", 128, NULL, 1, NULL) != pdPASS)
+	// {
+	// 	return API_ERROR;
+	// }
+	
 	/* Task Size is in words -> uint32_t -> 1024 bytes / 4 -> 256 words */
-	if (xTaskCreate(identificationTask, "Task1", 3000, NULL, tskIDLE_PRIORITY + 1, NULL) != pdPASS)
+	if (xTaskCreate(controlPlacementTask, "Task1", 3000, NULL, tskIDLE_PRIORITY + 1, NULL) != pdPASS)
 	{
 		return API_ERROR;
 	}

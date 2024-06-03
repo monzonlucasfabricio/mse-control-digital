@@ -22,6 +22,12 @@
 
 /* USER CODE BEGIN 0 */
 #define DEBUG_MSG_ENABLE
+
+extern QueueHandle_t uart3RxQueue;
+extern SemaphoreHandle_t xMutex;
+extern uint8_t rxBuffer[12];
+extern float globalVar1, globalVar2, globalVar3;
+
 /* USER CODE END 0 */
 
 UART_HandleTypeDef huart3;
@@ -81,7 +87,8 @@ void HAL_UART_MspInit(UART_HandleTypeDef* uartHandle)
     HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
 
   /* USER CODE BEGIN USART3_MspInit 1 */
-
+    HAL_NVIC_SetPriority(USART3_IRQn, 5, 0);
+    HAL_NVIC_EnableIRQ(USART3_IRQn);
   /* USER CODE END USART3_MspInit 1 */
   }
 }
@@ -150,4 +157,43 @@ void uartWriteString( UART_HandleTypeDef *huart, const char* str )
    }
 }
 
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+{
+    if (huart->Instance == USART3)
+    {
+        BaseType_t xHigherPriorityTaskWoken = pdFALSE;
+        xQueueSendFromISR(uart3RxQueue, rxBuffer, &xHigherPriorityTaskWoken);
+        portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+
+        // Re-enable the UART receive interrupt
+        HAL_UART_Receive_IT(&huart3, rxBuffer, RX_BUFFER_SIZE);
+    }
+}
+
+void UART3Task(void *pvParameters)
+{
+    uint8_t receivedData[RX_BUFFER_SIZE];
+    while (1)
+    {
+        if (xQueueReceive(uart3RxQueue, &receivedData, portMAX_DELAY) == pdPASS)
+        {
+            // Convert received data to floats
+            float tempVar1, tempVar2, tempVar3;
+            memcpy(&tempVar1, &receivedData[0], sizeof(float));
+            memcpy(&tempVar2, &receivedData[4], sizeof(float));
+            memcpy(&tempVar3, &receivedData[8], sizeof(float));
+
+            // Take the mutex before updating the global variables
+            if (xSemaphoreTake(xMutex, portMAX_DELAY) == pdTRUE)
+            {
+                globalVar1 = tempVar1;
+                globalVar2 = tempVar2;
+                globalVar3 = tempVar3;
+                xSemaphoreGive(xMutex);
+            }
+
+            // Process the received floats if needed
+        }
+    }
+}
 /* USER CODE END 1 */

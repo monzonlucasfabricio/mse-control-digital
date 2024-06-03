@@ -22,6 +22,7 @@
 #include "app_main.h"
 #include "pid_controller.h"
 
+
 /*=====[Definition macros of private constants]==============================*/
 
 #define SCALE_Y         0.0008058608    // 3.3 / 4095     12-bit ADC to Voltage
@@ -52,7 +53,19 @@
 #define DEN1 -1.45598237f
 #define DEN2 0.52638449f
 
+typedef struct {
+  float Ad[2][2];
+	float Bd[2];
+	float Cd[2];
+	float K[2];
+	float Ko;
+} pole_placement_config_t;
+
+
 /*=====[Prototypes (declarations) of private functions]======================*/
+void pole_placement_init(pole_placement_config_t *config);
+float pole_placement_control(pole_placement_config_t *config, float state[2], float reference);
+
 static float pidRecurrenceFunction(float input);
 void pid_print (char *name, float buffer);
 
@@ -78,22 +91,6 @@ void pidControlTask( void* taskParmPtr )
    // Enable ADC/DAC
    ADC_Init( ADC_ENABLE );
    DAC_Init( DAC_ENABLE );
-
-   // PID Controller structure (like an object instance)
-   PIDController_t PsPIDController;
-
-   // PID Controller Initialization
-   pidInit( &PsPIDController,
-            3.52f,                  // Kp
-            135.f / h_s,        	// Ki
-            0.03528f * h_s,        	// Kd
-            h_s,                   // h en [s]
-            20.0f,                 // N
-            1.0f,                  // b
-            0.0f,                  // u_min
-            3.3f                   // u_max
-          );
-
 
    TickType_t xLastWakeTime;
    // Convertir el período a ticks
@@ -121,6 +118,75 @@ void pidControlTask( void* taskParmPtr )
       pid_print("e",e);
 
       u = pidRecurrenceFunction(e) * SCALE_U;
+
+      pid_print("u",u);
+
+      DAC_Write(&hdac,u);
+
+/* Descomentar esta linea si quiero enviar la entrada directamente al sistema sin pasar por el PID */
+      //DAC_Write(&hdac,tmp_r);
+
+      vTaskDelayUntil(&xLastWakeTime, xPeriod);
+   }
+}
+
+
+void controlPlacementTask( void* taskParmPtr )
+{
+   // Controller signals
+   float r = 0.0f; // Measure of reference r[k]
+   float y = 0.0f; // Measure of system output y[k]
+   float x = 0.0f;
+   float e = 0.0f;
+   float u = 0.0f; // Calculated controller's output u[k]
+
+   pole_placement_config_t config;
+
+   pole_placement_init(&config);
+
+   // h no puede ser menor ni al tiempo del algoritmo, y con va a ser un
+   // multiplo del periodo de tick del RTOS
+   uint32_t h_ms = 5; // Task periodicity (sample rate)
+   float h_s = ((float)h_ms)/1000.0f;
+
+   // Enable ADC/DAC
+   ADC_Init( ADC_ENABLE );
+   DAC_Init( DAC_ENABLE );
+
+   TickType_t xLastWakeTime;
+   // Convertir el período a ticks
+   const TickType_t xPeriod = pdMS_TO_TICKS(TASK_PERIOD_MS);
+
+   // Inicializar xLastWakeTime con el tiempo actual
+   xLastWakeTime = xTaskGetTickCount();
+
+//   portTickType xPeriodicity =  h_ms / portTICK_RATE_MS;
+//   portTickType xLastWakeTime = xTaskGetTickCount();
+   while(true) {
+
+      float states[2] = {0,0};
+      
+      uint16_t tmp_x = ADC_Read( CH3);
+      uint16_t tmp_y = ADC_Read( CH10 );
+      uint16_t tmp_r = ADC_Read( CH13 );
+
+      x = tmp_x * SCALE_Y;
+      y = tmp_y * SCALE_Y;
+      r = tmp_r * SCALE_R;
+      e = 2*r - y;
+
+      print_debug_msg("(ADC) y : %d\n",tmp_y);
+      print_debug_msg("(ADC) r : %d\n",tmp_r);
+
+      pid_print("r",r);
+      pid_print("y",y);
+      pid_print("x",x);
+      pid_print("e",e);
+
+      states[0] = x;
+      states[1] = y;
+
+      u = pole_placement_control(&config, states, r) * SCALE_U;
 
       pid_print("u",u);
 
@@ -222,6 +288,29 @@ void pid_print (char *name, float buffer)
 }
 
 
+float pole_placement_control(pole_placement_config_t *config, float state[2], float reference) {
+	  return (config->Ko * reference) - (config->K[0] * state[0] + config->K[1] * state[1]);
+}
+
+void pole_placement_init(pole_placement_config_t *config)
+{
+  uint8_t escala = 10;
+  config->Ad[0][0] = 1.21436117;
+	config->Ad[0][1] = -0.31140322;
+	config->Ad[1][0] = 1.0;
+	config->Ad[1][1] = 0;
+
+	config->Bd[0] = 1.0;
+	config->Bd[1] = 0;
+
+	config->Cd[0] = 0.05779782;
+	config->Cd[1] = 0.03924424;
+
+  config->K[0] = 0.01436117*escala;
+  config->K[1] = 0.08859678*escala;
+
+  config->Ko = 2.06096207;
+}
 /*=====[Implementations of interrupt functions]==============================*/
 
 /*=====[Implementations of private functions]================================*/

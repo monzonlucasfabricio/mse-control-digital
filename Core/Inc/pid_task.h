@@ -33,6 +33,7 @@ extern "C" {
 
 void pidControlTask( void* taskParmPtr );  // Task declaration
 void PID_TaskDemo(void* pvParameter);
+void controlPlacementTask( void* taskParmPtr );
 /*=====[Prototypes (declarations) of public interrupt functions]=============*/
 
 /*=====[C++ - end]===========================================================*/

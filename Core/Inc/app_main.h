@@ -14,6 +14,8 @@
 #include "identif_ls.h"
 #include "identif_rls.h"
 
+#define RX_BUFFER_SIZE 12
+
 typedef enum{
 	API_OK,
 	API_ERROR,

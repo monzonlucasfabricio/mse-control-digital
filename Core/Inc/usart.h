@@ -32,6 +32,8 @@ extern "C" {
 #include "stdio.h"
 #include "stdarg.h"
 #include "string.h"
+#include "queue.h"
+#include "semphr.h"
 /* USER CODE END Includes */
 
 extern UART_HandleTypeDef huart3;
@@ -46,6 +48,7 @@ void MX_USART3_UART_Init(void);
 void print_debug_msg(char *format,...);
 void uartWriteByteArray( UART_HandleTypeDef *huart, char* byteArray, uint32_t byteArrayLen );
 void uartWriteString( UART_HandleTypeDef *huart, const char* str );
+void UART3Task(void *pvParameters);
 /* USER CODE END Prototypes */
 
 #ifdef __cplusplus
